@@ -1,6 +1,7 @@
 import type { Adapter, AdapterContext, Deal } from "../types";
 import { fetchText } from "../http";
 import { percentOff } from "../filters";
+import { absoluteUrl } from "../url";
 
 // Lowe's clearance category page. Like Walmart, this is bot-challenged often.
 // We parse server-rendered product JSON embedded as <script type="application/ld+json">.
@@ -77,7 +78,7 @@ export const lowesAdapter: Adapter = {
         percentOff: pct,
         inStock:
           (it.offers?.availability ?? "").toLowerCase().includes("instock"),
-        productUrl: it.url ?? CLEARANCE_URL,
+        productUrl: absoluteUrl("https://www.lowes.com", it.url) ?? CLEARANCE_URL,
         storeLocatorUrl: `https://www.lowes.com/store?location=${ctx.zip}`,
       });
     }

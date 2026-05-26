@@ -1,64 +1,73 @@
 import type { Adapter, AdapterContext, Deal, Retailer } from "../types";
 
-// Mock data so the UI is usable when adapters are blocked.
-// Activated by DEAL_SCANNER_MOCK=1 or when every real adapter errors.
-const SAMPLES: Record<Retailer, Omit<Deal, "id" | "storeLocatorUrl">[]> = {
+// Sample data shown when an adapter is blocked or returns nothing. Each
+// productUrl points at the retailer's REAL clearance category page so the
+// click still lands on a useful page (not a fake product ID that 404s).
+const CLEARANCE: Record<Retailer, string> = {
+  target: "https://www.target.com/c/clearance/-/N-5q0ga",
+  walmart: "https://www.walmart.com/shop/deals/clearance",
+  homedepot: "https://www.homedepot.com/b/Savings-Center/N-5yc1vZ7n",
+  lowes: "https://www.lowes.com/pl/Clearance/4294857524",
+};
+
+const SAMPLES: Record<Retailer, Omit<Deal, "id" | "productUrl" | "storeLocatorUrl">[]> = {
   target: [
     {
       retailer: "target",
-      title: "Threshold 12-Cup Coffee Maker",
-      image: "https://target.scene7.com/is/image/Target/GUEST_demo_coffee",
+      title: "Sample: Threshold 12-Cup Coffee Maker",
       originalPrice: 49.99,
       salePrice: 12.48,
       percentOff: 75,
       inStock: true,
-      storeName: "Target Anytown",
-      productUrl: "https://www.target.com/p/-/A-12345678",
+      storeName: "Nearest Target",
     },
     {
       retailer: "target",
-      title: "Cat & Jack Boys' Hoodie",
+      title: "Sample: Cat & Jack Boys' Hoodie",
       originalPrice: 18.0,
       salePrice: 4.5,
       percentOff: 75,
       inStock: true,
-      storeName: "Target Anytown",
-      productUrl: "https://www.target.com/p/-/A-87654321",
+      storeName: "Nearest Target",
     },
   ],
   walmart: [
     {
       retailer: "walmart",
-      title: "Mainstays 6-Quart Stockpot",
+      title: "Sample: Mainstays 6-Quart Stockpot",
       originalPrice: 24.97,
       salePrice: 6.0,
       percentOff: 76,
       inStock: true,
-      productUrl: "https://www.walmart.com/ip/000000000",
     },
   ],
   homedepot: [
     {
       retailer: "homedepot",
-      title: "Husky 25 ft. Tape Measure (Clearance)",
+      title: "Sample: Husky 25 ft. Tape Measure (Clearance)",
       originalPrice: 19.97,
       salePrice: 5.0,
       percentOff: 75,
       inStock: true,
-      productUrl: "https://www.homedepot.com/p/000000000",
     },
   ],
   lowes: [
     {
       retailer: "lowes",
-      title: "Allen + Roth Outdoor Pillow",
+      title: "Sample: Allen + Roth Outdoor Pillow",
       originalPrice: 29.98,
       salePrice: 7.0,
       percentOff: 77,
       inStock: true,
-      productUrl: "https://www.lowes.com/pd/000000000",
     },
   ],
+};
+
+const STORE_LOCATOR: Record<Retailer, (zip: string) => string> = {
+  target: (zip) => `https://www.target.com/store-locator/find-stores?address=${zip}`,
+  walmart: (zip) => `https://www.walmart.com/store/finder?location=${zip}`,
+  homedepot: (zip) => `https://www.homedepot.com/l/storeDirectory?searchZip=${zip}`,
+  lowes: (zip) => `https://www.lowes.com/store?location=${zip}`,
 };
 
 export function mockAdapter(retailer: Retailer): Adapter {
@@ -67,15 +76,9 @@ export function mockAdapter(retailer: Retailer): Adapter {
     async scan(ctx: AdapterContext): Promise<Deal[]> {
       return SAMPLES[retailer].map((d, i) => ({
         ...d,
-        id: `${retailer}:mock:${i}`,
-        storeLocatorUrl:
-          retailer === "target"
-            ? `https://www.target.com/store-locator/find-stores?address=${ctx.zip}`
-            : retailer === "walmart"
-              ? `https://www.walmart.com/store/finder?location=${ctx.zip}`
-              : retailer === "homedepot"
-                ? `https://www.homedepot.com/l/storeDirectory?searchZip=${ctx.zip}`
-                : `https://www.lowes.com/store?location=${ctx.zip}`,
+        id: `${retailer}:sample:${i}`,
+        productUrl: CLEARANCE[retailer],
+        storeLocatorUrl: STORE_LOCATOR[retailer](ctx.zip),
       }));
     },
   };

@@ -1,6 +1,7 @@
 import type { Adapter, AdapterContext, Deal } from "../types";
 import { fetchJson } from "../http";
 import { percentOff } from "../filters";
+import { absoluteUrl } from "../url";
 
 // Home Depot exposes a "federation-gateway" GraphQL endpoint. The "Special Buys"
 // + "Hot Deals" categories surface the deepest markdowns. We hit their public
@@ -90,11 +91,9 @@ export const homeDepotAdapter: Adapter = {
       if (sale == null || original == null || original <= sale) continue;
       const pct = percentOff(original, sale);
       const img = p.media?.images?.find((i) => i.type === "IMAGE")?.url;
-      const path =
-        p.identifiers?.canonicalUrl ?? `/p/${p.itemId}`;
-      const url = path.startsWith("http")
-        ? path
-        : `https://www.homedepot.com${path}`;
+      const url =
+        absoluteUrl("https://www.homedepot.com", p.identifiers?.canonicalUrl) ??
+        `https://www.homedepot.com/p/${p.itemId}`;
       const inStock = (p.fulfillment?.fulfillmentOptions ?? []).some((o) =>
         (o.services ?? []).some((s) =>
           (s.locations ?? []).some((l) => l.isAnchor && l.inventory?.isInStock),

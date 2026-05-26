@@ -189,6 +189,28 @@ function ResultsHeader({ result }: { result: ScanResponse }) {
           Fetched {new Date(result.fetchedAt).toLocaleTimeString()}
         </span>
       </div>
+      {result.stats.length > 0 && (
+        <ul className="basis-full flex flex-wrap gap-2 text-xs">
+          {result.stats.map((s) => (
+            <li
+              key={s.retailer}
+              className={`rounded px-2 py-0.5 ring-1 ring-inset ${
+                s.sampleData
+                  ? "bg-amber-500/10 text-amber-200 ring-amber-500/30"
+                  : "bg-zinc-800/60 text-zinc-300 ring-zinc-700"
+              }`}
+              title={
+                s.sampleData
+                  ? "Live data unavailable — showing sample"
+                  : `${s.fetched} fetched, ${s.matched} match filters`
+              }
+            >
+              {RETAILER_LABEL[s.retailer]}: {s.matched}
+              {s.sampleData ? " (sample)" : ""}
+            </li>
+          ))}
+        </ul>
+      )}
       {result.errors.length > 0 && (
         <ul className="basis-full text-xs text-amber-300/90">
           {result.errors.map((e, i) => (

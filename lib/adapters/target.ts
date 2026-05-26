@@ -1,6 +1,7 @@
 import type { Adapter, AdapterContext, Deal } from "../types";
 import { fetchJson } from "../http";
 import { percentOff } from "../filters";
+import { absoluteUrl } from "../url";
 
 const REDSKY_KEY =
   process.env.TARGET_REDSKY_KEY || "9f36aeafbe60771e321a7cc95a78140772ab3e96";
@@ -119,8 +120,9 @@ function toDeal(item: PlpItem, storeId: string): Deal | null {
   const pct = percentOff(original, sale);
   const opts = item.fulfillment?.store_options ?? [];
   const here = opts.find((o) => o.location_id === storeId) ?? opts[0];
-  const productPath =
-    item.enrichment?.buy_url || `https://www.target.com/p/-/A-${item.tcin}`;
+  const productUrl =
+    absoluteUrl("https://www.target.com", item.enrichment?.buy_url) ??
+    `https://www.target.com/p/-/A-${item.tcin}`;
   return {
     id: `target:${item.tcin}`,
     retailer: "target",
@@ -134,7 +136,7 @@ function toDeal(item: PlpItem, storeId: string): Deal | null {
     inStock: inStockAt(item, storeId),
     storeId,
     storeName: here?.location_name,
-    productUrl: productPath,
+    productUrl,
     storeLocatorUrl: `https://www.target.com/store-locator/find-stores?id=${storeId}`,
   };
 }

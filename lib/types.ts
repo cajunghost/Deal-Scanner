@@ -23,9 +23,17 @@ export interface ScanRequest {
   radiusMiles?: number;
 }
 
+export interface RetailerStat {
+  retailer: Retailer;
+  matched: number;
+  fetched: number;
+  sampleData: boolean;
+}
+
 export interface ScanResponse {
   deals: Deal[];
   errors: { retailer: Retailer; message: string }[];
+  stats: RetailerStat[];
   fetchedAt: string;
   proxied: boolean;
 }

@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { getAdapter, getFallback } from "@/lib/adapters";
 import { applyFilters } from "@/lib/filters";
 import { isProxyActive } from "@/lib/http";
-import type { Deal, Retailer, ScanRequest, ScanResponse } from "@/lib/types";
+import type {
+  Deal,
+  Retailer,
+  RetailerStat,
+  ScanRequest,
+  ScanResponse,
+} from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -39,6 +45,7 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
             message: e instanceof Error ? e.message : "Bad request",
           },
         ],
+        stats: [],
         fetchedAt: new Date().toISOString(),
         proxied: isProxyActive(),
       },
@@ -56,20 +63,27 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
 
   const results = await Promise.all(
     parsed.retailers.map(async (retailer) => {
+      let deals: Deal[] = [];
+      let error: string | null = null;
+      let sampleData = false;
       try {
-        const deals = await getAdapter(retailer).scan(ctx);
-        return { retailer, deals, error: null as string | null };
+        deals = await getAdapter(retailer).scan(ctx);
       } catch (e) {
-        const message = e instanceof Error ? e.message : String(e);
-        // graceful degrade: return mock data for this retailer so the UI
-        // still shows something, but flag the error.
+        error = e instanceof Error ? e.message : String(e);
+      }
+      // If we got nothing (either threw, or live returned empty), fall back
+      // to sample data so the user always sees the retailer represented.
+      if (deals.length === 0) {
         try {
-          const deals = await getFallback(retailer).scan(ctx);
-          return { retailer, deals, error: `${message} — showing sample data` };
+          deals = await getFallback(retailer).scan(ctx);
+          sampleData = true;
+          if (!error) error = "no live results — showing sample data";
+          else error = `${error} — showing sample data`;
         } catch {
-          return { retailer, deals: [] as Deal[], error: message };
+          // truly nothing to show
         }
       }
+      return { retailer, deals, error, sampleData };
     }),
   );
 
@@ -78,6 +92,14 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
     minPercentOff: parsed.minPercentOff,
     inStockOnly: parsed.inStockOnly,
   });
+
+  const stats: RetailerStat[] = results.map((r) => ({
+    retailer: r.retailer,
+    fetched: r.deals.length,
+    matched: filtered.filter((d) => d.retailer === r.retailer).length,
+    sampleData: r.sampleData,
+  }));
+
   const errors = results
     .filter((r) => r.error)
     .map((r) => ({ retailer: r.retailer, message: r.error! }));
@@ -85,6 +107,7 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
   return NextResponse.json({
     deals: filtered,
     errors,
+    stats,
     fetchedAt: new Date().toISOString(),
     proxied: isProxyActive(),
   });
