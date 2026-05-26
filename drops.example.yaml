@@ -1,0 +1,35 @@
+# Pokémon TCG drop calendar — example.
+#
+# Copy to `drops.yaml` (or any path) and reference it from config.yaml:
+#
+#   drops_files:
+#     - drops.yaml
+#
+# You can also aggregate multiple community-maintained lists via `drops_urls`
+# in config.yaml — anything served as YAML or JSON with the same schema
+# (top-level `drops:` list) will be merged. Later sources override earlier
+# ones on slug collision.
+#
+# Replace the placeholder dates and product URLs below with real ones for the
+# releases you care about. The slug is the stable identifier — keep it
+# kebab-case and don't reuse it across distinct products.
+
+drops:
+  - slug: example-booster-box
+    name: "EXAMPLE — Booster Box (replace me)"
+    release_date: 2026-09-01
+    msrp: 161.64
+    notes: "36-pack booster box. Standard street date."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/product/REPLACE"
+      target: "https://www.target.com/p/REPLACE/-/A-00000000"
+      walmart: "https://www.walmart.com/ip/REPLACE/000000000"
+      bestbuy: "https://www.bestbuy.com/site/REPLACE/0000000.p"
+
+  - slug: example-elite-trainer-box
+    name: "EXAMPLE — Elite Trainer Box (replace me)"
+    release_date: 2026-10-15
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/product/REPLACE"
+      target: "https://www.target.com/p/REPLACE/-/A-00000000"

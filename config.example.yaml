@@ -8,7 +8,7 @@
 default_poll_interval_seconds: 600
 
 # Maximum acceptable markup over MSRP, as a percentage. 10 means "alert if
-# price <= MSRP * 1.10". Can be overridden per product.
+# price <= MSRP * 1.10". Can be overridden per product or per watch_drops entry.
 default_max_markup_pct: 10.0
 
 # Identify yourself in the User-Agent. Some sites are friendlier when they
@@ -31,23 +31,35 @@ notifiers:
   # https://ntfy.sh/<your-topic>. Subscribe on phone/desktop to receive.
   ntfy_topic_url: null
 
-# Products to watch. `retailer` is optional — the scanner picks one based on
-# the URL hostname, but you can force it.
-products:
-  - name: "Scarlet & Violet — Surging Sparks Booster Box"
-    url: "https://www.pokemoncenter.com/product/REPLACE-WITH-REAL-PRODUCT-PATH"
-    msrp: 161.64
-    # max_markup_pct: 10
-    # poll_interval_seconds: 900
+# ─── Drop calendar (aggregated) ──────────────────────────────────────────────
+#
+# Local YAML files with drop entries. See drops.example.yaml for the schema.
+drops_files:
+  - drops.yaml
 
-  - name: "Pokémon TCG: Booster Bundle (example)"
-    url: "https://www.target.com/p/REPLACE-WITH-REAL-PRODUCT-PATH/-/A-00000000"
-    msrp: 26.99
+# Remote YAML or JSON drop sources. Each URL should return the same schema as
+# drops.yaml (top-level `drops:` list). Useful for subscribing to a friend's
+# or community-curated calendar. Later sources override earlier ones on slug
+# collision; `drops_files` are loaded before `drops_urls`.
+drops_urls: []
+  # - https://raw.githubusercontent.com/some-user/pokemon-drops/main/drops.yaml
 
-  - name: "Pokémon TCG: Elite Trainer Box (example)"
-    url: "https://www.walmart.com/ip/REPLACE-WITH-REAL-PRODUCT-PATH/000000000"
-    msrp: 49.99
+# Auto-watch products from the drop calendar. Each entry expands into one
+# Product per retailer link in that drop, so a single drop with four
+# retailer URLs is watched at all four retailers automatically.
+watch_drops: []
+  # - slug: example-booster-box
+  #   max_markup_pct: 5
+  # - slug: example-elite-trainer-box
+  #   retailers: [pokemoncenter, target]   # subset; omit to watch all
 
-  - name: "Pokémon TCG: Tin (example)"
-    url: "https://www.bestbuy.com/site/REPLACE-WITH-REAL-PRODUCT-PATH/0000000.p"
-    msrp: 24.99
+# ─── Manually watched products ───────────────────────────────────────────────
+#
+# Anything listed here is watched in addition to `watch_drops`. Set
+# `drop_slug` to enable cross-retailer "Also try:" links in alerts.
+products: []
+  # - name: "Surging Sparks Booster Box @ pokemoncenter"
+  #   url: "https://www.pokemoncenter.com/product/REPLACE"
+  #   msrp: 161.64
+  #   drop_slug: example-booster-box
+  #   max_markup_pct: 5

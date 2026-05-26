@@ -15,6 +15,7 @@ from tenacity import (
 )
 
 from .config import Config, Product
+from .drops import Drop
 from .notifier import send_alert
 from .retailers import Listing, get_retailer_for_url
 from .robots import RobotsCache
@@ -31,7 +32,8 @@ class _Schedule:
     max_markup_pct: float
 
 
-def run(config: Config) -> None:
+def run(config: Config, drops_by_slug: dict[str, Drop] | None = None) -> None:
+    drops_by_slug = drops_by_slug or {}
     state = State(config.state_file)
     robots = RobotsCache(config.user_agent) if config.respect_robots_txt else None
     session = requests.Session()
@@ -70,7 +72,7 @@ def run(config: Config) -> None:
         due = [s for s in schedule if s.next_run <= now]
         for s in due:
             try:
-                _check_one(s, config, session, state, robots)
+                _check_one(s, config, session, state, robots, drops_by_slug)
             except Exception:
                 log.exception("Error checking %s", s.product.name)
             jitter = random.uniform(0.85, 1.15)
@@ -86,6 +88,7 @@ def _check_one(
     session: requests.Session,
     state: State,
     robots: RobotsCache | None,
+    drops_by_slug: dict[str, Drop] | None = None,
 ) -> None:
     p = s.product
     if robots is not None and not robots.can_fetch(p.url):
@@ -106,9 +109,8 @@ def _check_one(
 
     if favorable and not state.get_alerted(key):
         title = f"In stock at MSRP-ish: {p.name}"
-        message = (
-            f"Price ${listing.price:.2f} {listing.currency} "
-            f"(MSRP ${p.msrp:.2f}, max ${threshold:.2f}) at {retailer.name}"
+        message = _alert_message(
+            p, listing, threshold, retailer.name, drops_by_slug
         )
         send_alert(config.notifiers, title=title, message=message, url=p.url)
         state.set_alerted(key, True)
@@ -124,6 +126,37 @@ def _check_one(
         listing.raw_status or "-",
         threshold,
     )
+
+
+def _alert_message(
+    p: Product,
+    listing: Listing,
+    threshold: float,
+    retailer_name: str,
+    drops_by_slug: dict[str, Drop] | None,
+) -> str:
+    lines = [
+        f"Price ${listing.price:.2f} {listing.currency} "
+        f"(MSRP ${p.msrp:.2f}, max ${threshold:.2f}) at {retailer_name}",
+        f"Buy: {p.url}",
+    ]
+    drop = (
+        drops_by_slug.get(p.drop_slug)
+        if drops_by_slug and p.drop_slug
+        else None
+    )
+    if drop and drop.links:
+        siblings = [
+            (r, url)
+            for r, url in sorted(drop.links.items())
+            if url != p.url
+        ]
+        if siblings:
+            lines.append("")
+            lines.append("Also try:")
+            for r, url in siblings:
+                lines.append(f"  · {r}: {url}")
+    return "\n".join(lines)
 
 
 @retry(
