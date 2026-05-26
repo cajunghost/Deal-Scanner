@@ -1,0 +1,22 @@
+[project]
+name = "deal-scanner"
+version = "0.1.0"
+description = "Restock and MSRP-price notifier for Pokémon TCG products across major retailers."
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "PyYAML>=6.0",
+    "tenacity>=8.2",
+]
+
+[project.scripts]
+deal-scanner = "deal_scanner.__main__:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["deal_scanner*"]

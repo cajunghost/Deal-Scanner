@@ -1,0 +1,53 @@
+# Deal Scanner — example config
+#
+# Copy to `config.yaml` and edit. `config.yaml` is gitignored.
+
+# Default poll interval per product, in seconds. Keep this generous —
+# retailers rate-limit aggressively and excessive polling will get you blocked
+# (and is rude). 5–15 minutes is reasonable.
+default_poll_interval_seconds: 600
+
+# Maximum acceptable markup over MSRP, as a percentage. 10 means "alert if
+# price <= MSRP * 1.10". Can be overridden per product.
+default_max_markup_pct: 10.0
+
+# Identify yourself in the User-Agent. Some sites are friendlier when they
+# can see who's hitting them.
+user_agent: "DealScannerBot/0.1 (+contact: you@example.com)"
+
+# Respect robots.txt (recommended). If a retailer disallows the product URL
+# in robots.txt, the scanner will skip it.
+respect_robots_txt: true
+
+# Where to persist alert-state (so you don't get re-notified every cycle).
+state_file: state.json
+
+# Notifications — set one or both. Both are pull-style services that don't
+# require API keys baked into source.
+notifiers:
+  # Discord: Server Settings → Integrations → Webhooks → New Webhook → Copy URL
+  discord_webhook_url: null
+  # ntfy: subscribe to a topic at https://ntfy.sh (or self-host). Push URL is
+  # https://ntfy.sh/<your-topic>. Subscribe on phone/desktop to receive.
+  ntfy_topic_url: null
+
+# Products to watch. `retailer` is optional — the scanner picks one based on
+# the URL hostname, but you can force it.
+products:
+  - name: "Scarlet & Violet — Surging Sparks Booster Box"
+    url: "https://www.pokemoncenter.com/product/REPLACE-WITH-REAL-PRODUCT-PATH"
+    msrp: 161.64
+    # max_markup_pct: 10
+    # poll_interval_seconds: 900
+
+  - name: "Pokémon TCG: Booster Bundle (example)"
+    url: "https://www.target.com/p/REPLACE-WITH-REAL-PRODUCT-PATH/-/A-00000000"
+    msrp: 26.99
+
+  - name: "Pokémon TCG: Elite Trainer Box (example)"
+    url: "https://www.walmart.com/ip/REPLACE-WITH-REAL-PRODUCT-PATH/000000000"
+    msrp: 49.99
+
+  - name: "Pokémon TCG: Tin (example)"
+    url: "https://www.bestbuy.com/site/REPLACE-WITH-REAL-PRODUCT-PATH/0000000.p"
+    msrp: 24.99
