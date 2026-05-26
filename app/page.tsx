@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Deal, Retailer, ScanResponse } from "@/lib/types";
 
 const RETAILER_LABEL: Record<Retailer, string> = {
@@ -58,8 +58,9 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <header className="mb-8">
+    <main className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
+      <IosInstallHint />
+      <header className="mb-6 sm:mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Deal Scanner</h1>
         <p className="mt-1 text-sm text-zinc-400">
           Find extremely marked-down items at stores near you. Default threshold:{" "}
@@ -275,5 +276,46 @@ function DealCard({ deal }: { deal: Deal }) {
         </div>
       </div>
     </li>
+  );
+}
+
+function IosInstallHint() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const ua = window.navigator.userAgent;
+    const isIos = /iPad|iPhone|iPod/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      // @ts-expect-error iOS-specific
+      window.navigator.standalone === true;
+    const dismissed =
+      window.localStorage.getItem("dealScanner.iosHintDismissed") === "1";
+    if (isIos && !isStandalone && !dismissed) setShow(true);
+  }, []);
+
+  if (!show) return null;
+  return (
+    <div className="mb-4 flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm">
+      <div className="flex-1">
+        <div className="font-medium text-emerald-200">Install Deal Scanner</div>
+        <div className="mt-0.5 text-xs text-emerald-100/80">
+          Tap the <span className="font-semibold">Share</span> button in Safari,
+          then <span className="font-semibold">Add to Home Screen</span> for a
+          full-screen app experience.
+        </div>
+      </div>
+      <button
+        onClick={() => {
+          window.localStorage.setItem("dealScanner.iosHintDismissed", "1");
+          setShow(false);
+        }}
+        aria-label="Dismiss"
+        className="-mr-1 -mt-1 px-2 py-1 text-emerald-200/70 hover:text-emerald-100"
+      >
+        ✕
+      </button>
+    </div>
   );
 }

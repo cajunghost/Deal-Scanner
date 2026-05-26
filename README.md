@@ -4,6 +4,24 @@ Find extremely marked-down items (default: **70%+ off**) at Target, Walmart,
 Home Depot, and Lowe's stores near you. Every result links straight to the
 product page and the nearest store locator.
 
+## Install on iPhone (PWA)
+
+The app is a Progressive Web App. To install it on your iPhone home screen:
+
+1. Open your deployed URL in **Safari** (not Chrome — iOS only supports
+   PWA install from Safari).
+2. Tap the **Share** button (square with up arrow).
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**.
+
+You'll get a green-`%` icon on your home screen. Launching it opens
+full-screen with no browser chrome, a dark status bar, and respects the
+notch / home indicator safe areas. The first time you load the page in
+Safari, an in-app banner reminds you how to install.
+
+Same flow works on iPad, and the equivalent on Android Chrome appears as
+an automatic "Install app" prompt (no manual steps).
+
 ## Deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcajunghost%2Fdeal-scanner&project-name=deal-scanner&repository-name=deal-scanner&env=TARGET_REDSKY_KEY&envDescription=Target%27s+public+RedSky+client+key.+See+.env.example+for+the+current+default.)

@@ -6,4 +6,26 @@ html,
 body {
   background: #0b0d10;
   color: #e6e8eb;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  overscroll-behavior-y: contain;
+}
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Prevent iOS from zooming the page when an input is focused */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* No iOS rubber-band white flash above the dark UI */
+html {
+  background: #0b0d10;
 }
