@@ -4,6 +4,14 @@ Find extremely marked-down items (default: **70%+ off**) at Target, Walmart,
 Home Depot, and Lowe's stores near you. Every result links straight to the
 product page and the nearest store locator.
 
+## Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcajunghost%2Fdeal-scanner&project-name=deal-scanner&repository-name=deal-scanner&env=TARGET_REDSKY_KEY&envDescription=Target%27s+public+RedSky+client+key.+See+.env.example+for+the+current+default.)
+
+Click the button, sign in to Vercel, accept the repo, and paste a
+`TARGET_REDSKY_KEY` (or accept the default from `.env.example`). Vercel will
+build and give you a `*.vercel.app` URL in under a minute.
+
 ## Quick start
 
 ```bash
