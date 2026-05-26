@@ -23,6 +23,62 @@ npm run dev
 
 Enter a 5-digit ZIP, pick retailers, hit **Scan**.
 
+## Running locally for live data (residential IP)
+
+Walmart, Home Depot, and Lowe's block requests from datacenter IPs (including
+Vercel). Running locally from your home network usually works for all four
+retailers — no proxy needed. Two ways:
+
+**Web UI locally:**
+
+```bash
+npm run dev    # http://localhost:3000
+```
+
+**CLI (no browser):**
+
+```bash
+npm run scan -- --zip 90210
+npm run scan -- --zip 90210 --pct 60 --retailers target,walmart
+npm run scan -- --zip 90210 --html out/deals.html   # then open out/deals.html
+npm run scan -- --zip 90210 --json out/deals.json
+```
+
+CLI flags:
+
+| Flag                | Default  | Meaning                              |
+| ------------------- | -------- | ------------------------------------ |
+| `--zip <12345>`     | required | 5-digit ZIP code                     |
+| `--pct <70>`        | 70       | Minimum markdown %                   |
+| `--retailers <…>`   | all      | Comma-separated retailer list        |
+| `--include-oos`     | off      | Include out-of-stock items           |
+| `--html <path>`     | —        | Write an HTML report                 |
+| `--json <path>`     | —        | Write raw JSON                       |
+| `--timeout <ms>`    | 8000     | Per-adapter outbound timeout         |
+
+## Using a residential proxy on the deployed app
+
+If you'd rather not run locally, point `PROXY_URL` at any residential proxy
+service in your Vercel environment variables:
+
+```
+PROXY_URL=http://USER:[email protected]:22225
+```
+
+Tested formats (any of these env names work: `PROXY_URL`, `HTTPS_PROXY`,
+`HTTP_PROXY`):
+
+| Provider     | URL pattern                                                                  |
+| ------------ | ---------------------------------------------------------------------------- |
+| Bright Data  | `http://brd-customer-XYZ-zone-residential:[email protected]:22225` |
+| Oxylabs      | `http://customer-USER-cc-us:[email protected]:7777`                |
+| IPRoyal      | `http://USER:[email protected]:12321`                  |
+| Smartproxy   | `http://USER:[email protected]:10000`                       |
+
+When the proxy is active, the UI shows a green **proxied** badge next to the
+results header. All retailer fetches (Target included, even though it doesn't
+need it) are routed through the proxy via [`undici.ProxyAgent`](https://undici.nodejs.org/#/docs/api/ProxyAgent).
+
 ## How it works
 
 Each retailer has an adapter in `lib/adapters/`:
@@ -80,7 +136,7 @@ app/
   api/scan/route.ts     # POST /api/scan -> aggregated results
 lib/
   types.ts              # Deal, ScanRequest, Adapter
-  http.ts               # fetchJson / fetchText with timeout + UA
+  http.ts               # fetchJson/fetchText with timeout, UA, optional proxy
   filters.ts            # threshold + sort
   adapters/
     target.ts
@@ -89,6 +145,8 @@ lib/
     lowes.ts
     mock.ts             # sample data fallback
     index.ts            # registry
+scripts/
+  scan.ts               # CLI: same adapters, pretty terminal output + HTML
 ```
 
 ## Notes & caveats

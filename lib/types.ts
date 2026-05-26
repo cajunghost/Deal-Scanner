@@ -27,6 +27,7 @@ export interface ScanResponse {
   deals: Deal[];
   errors: { retailer: Retailer; message: string }[];
   fetchedAt: string;
+  proxied: boolean;
 }
 
 export interface AdapterContext {

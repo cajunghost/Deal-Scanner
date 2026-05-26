@@ -175,9 +175,19 @@ function ResultsHeader({ result }: { result: ScanResponse }) {
       <h2 className="text-lg font-semibold">
         {result.deals.length} deal{result.deals.length === 1 ? "" : "s"} found
       </h2>
-      <span className="text-xs text-zinc-500">
-        Fetched {new Date(result.fetchedAt).toLocaleTimeString()}
-      </span>
+      <div className="flex items-center gap-2 text-xs">
+        {result.proxied && (
+          <span
+            className="rounded bg-emerald-500/15 px-2 py-0.5 font-medium text-emerald-300 ring-1 ring-inset ring-emerald-500/30"
+            title="Outbound requests routed through PROXY_URL"
+          >
+            proxied
+          </span>
+        )}
+        <span className="text-zinc-500">
+          Fetched {new Date(result.fetchedAt).toLocaleTimeString()}
+        </span>
+      </div>
       {result.errors.length > 0 && (
         <ul className="basis-full text-xs text-amber-300/90">
           {result.errors.map((e, i) => (

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdapter, getFallback } from "@/lib/adapters";
 import { applyFilters } from "@/lib/filters";
+import { isProxyActive } from "@/lib/http";
 import type { Deal, Retailer, ScanRequest, ScanResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +40,7 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
           },
         ],
         fetchedAt: new Date().toISOString(),
+        proxied: isProxyActive(),
       },
       { status: 400 },
     );
@@ -84,5 +86,6 @@ export async function POST(req: Request): Promise<NextResponse<ScanResponse>> {
     deals: filtered,
     errors,
     fetchedAt: new Date().toISOString(),
+    proxied: isProxyActive(),
   });
 }
