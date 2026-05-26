@@ -9,8 +9,10 @@ from pathlib import Path
 import requests
 
 from .config import Config, expand_watch_drops, load_config
+from .discover import SEARCH_SPECS, search_urls, slugify
 from .drops import Drop, load_drops, upcoming
 from .ical import render_calendar
+from .notify_drops import notify_release_day
 from .robots import RobotsCache
 from .scanner import _check_one, _Schedule, run
 from .state import State
@@ -32,42 +34,57 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command")
 
     p_watch = sub.add_parser("watch", help="Run the restock watcher")
-    p_watch.add_argument(
-        "--once",
-        action="store_true",
-        help="Run one check pass and exit (useful for cron/testing)",
+    p_watch.add_argument("--once", action="store_true")
+
+    p_drops = sub.add_parser("drops", help="List or export the drop calendar")
+    p_drops.add_argument("--days", type=int, default=None)
+    p_drops.add_argument("--all", action="store_true")
+    p_drops.add_argument("--ical", metavar="PATH")
+    p_drops.add_argument("--json", action="store_true")
+
+    p_notify = sub.add_parser(
+        "notify-drops",
+        help="Send a release-day notification for drops launching today.",
+    )
+    p_notify.add_argument(
+        "--lookahead", type=int, default=0,
+        help="Also notify drops launching within the next N days (default: 0).",
     )
 
-    p_drops = sub.add_parser(
-        "drops", help="List or export the aggregated drop calendar"
+    p_discover = sub.add_parser(
+        "discover",
+        help="Print retailer search URLs (and an optional drops.yaml stanza) for a query.",
     )
-    p_drops.add_argument(
-        "--days", type=int, default=None,
-        help="Only show drops within the next N days",
+    p_discover.add_argument("query", nargs="+")
+    p_discover.add_argument(
+        "--yaml", action="store_true",
+        help="Emit a ready-to-paste drops.yaml entry.",
     )
-    p_drops.add_argument(
-        "--all", action="store_true",
-        help="Include past drops (default: upcoming only)",
-    )
-    p_drops.add_argument(
-        "--ical", metavar="PATH",
-        help="Write the calendar as an iCalendar (.ics) file at PATH",
-    )
-    p_drops.add_argument(
-        "--json", action="store_true",
-        help="Emit as JSON instead of a text table",
+    p_discover.add_argument("--msrp", type=float, default=None)
+    p_discover.add_argument("--release-date", default=None)
+    p_discover.add_argument(
+        "--retailers", default=None,
+        help="Comma-separated subset (default: all).",
     )
 
     args = parser.parse_args(argv)
-
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
     )
 
+    command = args.command or "watch"
+    if command == "discover":
+        return _cmd_discover(
+            " ".join(args.query),
+            as_yaml=args.yaml,
+            msrp=args.msrp,
+            release_date=args.release_date,
+            retailers=_split_csv(args.retailers),
+        )
+
     config = load_config(args.config)
 
-    command = args.command or "watch"
     if command == "watch":
         return _cmd_watch(config, once=getattr(args, "once", False))
     if command == "drops":
@@ -78,8 +95,17 @@ def main(argv: list[str] | None = None) -> int:
             ical_path=args.ical,
             as_json=args.json,
         )
+    if command == "notify-drops":
+        return _cmd_notify_drops(config, lookahead=args.lookahead)
+
     parser.print_help()
     return 2
+
+
+def _split_csv(value: str | None) -> list[str] | None:
+    if not value:
+        return None
+    return [s.strip() for s in value.split(",") if s.strip()]
 
 
 def _load_all_drops(config: Config) -> list[Drop]:
@@ -169,6 +195,42 @@ def _cmd_drops(
         return 0
 
     _print_drops_table(drops)
+    return 0
+
+
+def _cmd_notify_drops(config: Config, *, lookahead: int) -> int:
+    drops = _load_all_drops(config)
+    state = State(config.state_file)
+    sent = notify_release_day(
+        drops, config.notifiers, state, lookahead_days=lookahead
+    )
+    print(f"Sent {sent} release-day notification(s).")
+    return 0
+
+
+def _cmd_discover(
+    query: str,
+    *,
+    as_yaml: bool,
+    msrp: float | None,
+    release_date: str | None,
+    retailers: list[str] | None,
+) -> int:
+    urls = search_urls(query, retailers)
+    if not as_yaml:
+        for retailer, url in urls.items():
+            print(f"{retailer:<16} {url}")
+        return 0
+
+    print(f"  - slug: {slugify(query)}")
+    print(f'    name: "{query}"')
+    if release_date:
+        print(f"    release_date: {release_date}")
+    if msrp is not None:
+        print(f"    msrp: {msrp}")
+    print("    links:")
+    for retailer, url in urls.items():
+        print(f'      {retailer}: "{url}"')
     return 0
 
 

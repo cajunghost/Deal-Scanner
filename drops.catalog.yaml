@@ -1,0 +1,332 @@
+# Pokémon TCG drop catalog — seeded with Scarlet & Violet era sets.
+#
+# Honest caveat: this is a starter catalog of sets the project author was
+# confident about. Pokémon releases new sets every 6-8 weeks; verify any
+# upcoming dates and add new sets with:
+#
+#     deal-scanner discover "Set Name Booster Box" --yaml \
+#         --msrp 161.64 --release-date 2026-MM-DD
+#
+# Link targets are retailer SEARCH URLs (e.g. target.com/s?searchTerm=...)
+# rather than specific product SKUs. Reasoning: SKU URLs rot when retailers
+# rotate inventory, but search URLs always resolve to the right results page
+# — one tap and you're at the buy page. If you want real-time restock
+# monitoring for a specific SKU, replace its link with the product-detail
+# URL (the JSON-LD scraper needs a PDP, not a search results page).
+#
+# Standard Pokémon TCG MSRPs (stable for years):
+#   Booster pack          $4.49
+#   Booster bundle (6×)   $26.99
+#   Booster box (36×)    $161.64
+#   Elite Trainer Box     $49.99
+#   Build & Battle Box    $22.99
+#   Premium Collection    $24.99
+#   Ultra-Premium Coll.  $119.99
+#   Tin (standard)        $24.99
+
+drops:
+  # ─── Scarlet & Violet — Base ─────────────────────────────────────────────
+  - slug: sv-base-booster-box
+    name: "Scarlet & Violet Base — Booster Box"
+    release_date: 2023-03-31
+    msrp: 161.64
+    notes: "S&V era launch set."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Scarlet+%26+Violet+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Scarlet+%26+Violet+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Scarlet+%26+Violet+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Scarlet+%26+Violet+Booster+Box"
+  - slug: sv-base-etb
+    name: "Scarlet & Violet Base — Elite Trainer Box"
+    release_date: 2023-03-31
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Scarlet+%26+Violet+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Scarlet+%26+Violet+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Scarlet+%26+Violet+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Scarlet+%26+Violet+Elite+Trainer+Box"
+
+  # ─── Paldea Evolved ──────────────────────────────────────────────────────
+  - slug: paldea-evolved-booster-box
+    name: "Paldea Evolved — Booster Box"
+    release_date: 2023-06-09
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paldea+Evolved+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Paldea+Evolved+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Paldea+Evolved+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paldea+Evolved+Booster+Box"
+  - slug: paldea-evolved-etb
+    name: "Paldea Evolved — Elite Trainer Box"
+    release_date: 2023-06-09
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paldea+Evolved+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Paldea+Evolved+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Paldea+Evolved+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paldea+Evolved+Elite+Trainer+Box"
+
+  # ─── Obsidian Flames ─────────────────────────────────────────────────────
+  - slug: obsidian-flames-booster-box
+    name: "Obsidian Flames — Booster Box"
+    release_date: 2023-08-11
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Obsidian+Flames+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Obsidian+Flames+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Obsidian+Flames+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Obsidian+Flames+Booster+Box"
+  - slug: obsidian-flames-etb
+    name: "Obsidian Flames — Elite Trainer Box"
+    release_date: 2023-08-11
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Obsidian+Flames+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Obsidian+Flames+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Obsidian+Flames+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Obsidian+Flames+Elite+Trainer+Box"
+
+  # ─── Pokémon 151 (high-demand set) ───────────────────────────────────────
+  - slug: pokemon-151-booster-box
+    name: "Pokémon 151 — Booster Box"
+    release_date: 2023-09-22
+    msrp: 161.64
+    notes: "Original 151 Kanto set. Persistently in high demand; ETB and bundles routinely scalped."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Pokemon+151+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Pokemon+151+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Pokemon+151+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Pokemon+151+Booster+Box"
+  - slug: pokemon-151-etb
+    name: "Pokémon 151 — Elite Trainer Box"
+    release_date: 2023-09-22
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Pokemon+151+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Pokemon+151+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Pokemon+151+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Pokemon+151+Elite+Trainer+Box"
+  - slug: pokemon-151-booster-bundle
+    name: "Pokémon 151 — Booster Bundle (6 packs)"
+    release_date: 2023-09-22
+    msrp: 26.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Pokemon+151+Booster+Bundle"
+      target:        "https://www.target.com/s?searchTerm=Pokemon+151+Booster+Bundle"
+      walmart:       "https://www.walmart.com/search?q=Pokemon+151+Booster+Bundle"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Pokemon+151+Booster+Bundle"
+
+  # ─── Paradox Rift ────────────────────────────────────────────────────────
+  - slug: paradox-rift-booster-box
+    name: "Paradox Rift — Booster Box"
+    release_date: 2023-11-03
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paradox+Rift+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Paradox+Rift+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Paradox+Rift+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paradox+Rift+Booster+Box"
+  - slug: paradox-rift-etb
+    name: "Paradox Rift — Elite Trainer Box"
+    release_date: 2023-11-03
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paradox+Rift+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Paradox+Rift+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Paradox+Rift+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paradox+Rift+Elite+Trainer+Box"
+
+  # ─── Paldean Fates (special set, very high demand) ───────────────────────
+  - slug: paldean-fates-etb
+    name: "Paldean Fates — Elite Trainer Box"
+    release_date: 2024-01-26
+    msrp: 49.99
+    notes: "Special set with shiny Pokémon. Booster boxes were retailer-exclusive; ETBs widely scalped."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paldean+Fates+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Paldean+Fates+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Paldean+Fates+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paldean+Fates+Elite+Trainer+Box"
+  - slug: paldean-fates-tech-sticker-collection
+    name: "Paldean Fates — Tech Sticker Collection"
+    release_date: 2024-01-26
+    msrp: 19.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Paldean+Fates+Tech+Sticker"
+      target:        "https://www.target.com/s?searchTerm=Paldean+Fates+Tech+Sticker"
+      walmart:       "https://www.walmart.com/search?q=Paldean+Fates+Tech+Sticker"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Paldean+Fates+Tech+Sticker"
+
+  # ─── Temporal Forces ─────────────────────────────────────────────────────
+  - slug: temporal-forces-booster-box
+    name: "Temporal Forces — Booster Box"
+    release_date: 2024-03-22
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Temporal+Forces+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Temporal+Forces+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Temporal+Forces+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Temporal+Forces+Booster+Box"
+  - slug: temporal-forces-etb
+    name: "Temporal Forces — Elite Trainer Box"
+    release_date: 2024-03-22
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Temporal+Forces+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Temporal+Forces+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Temporal+Forces+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Temporal+Forces+Elite+Trainer+Box"
+
+  # ─── Twilight Masquerade ─────────────────────────────────────────────────
+  - slug: twilight-masquerade-booster-box
+    name: "Twilight Masquerade — Booster Box"
+    release_date: 2024-05-24
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Twilight+Masquerade+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Twilight+Masquerade+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Twilight+Masquerade+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Twilight+Masquerade+Booster+Box"
+  - slug: twilight-masquerade-etb
+    name: "Twilight Masquerade — Elite Trainer Box"
+    release_date: 2024-05-24
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Twilight+Masquerade+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Twilight+Masquerade+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Twilight+Masquerade+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Twilight+Masquerade+Elite+Trainer+Box"
+
+  # ─── Shrouded Fable (special set) ────────────────────────────────────────
+  - slug: shrouded-fable-etb
+    name: "Shrouded Fable — Elite Trainer Box"
+    release_date: 2024-08-02
+    msrp: 49.99
+    notes: "Special set. ETBs scarce at retail."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Shrouded+Fable+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Shrouded+Fable+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Shrouded+Fable+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Shrouded+Fable+Elite+Trainer+Box"
+
+  # ─── Stellar Crown ───────────────────────────────────────────────────────
+  - slug: stellar-crown-booster-box
+    name: "Stellar Crown — Booster Box"
+    release_date: 2024-09-13
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Stellar+Crown+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Stellar+Crown+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Stellar+Crown+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Stellar+Crown+Booster+Box"
+  - slug: stellar-crown-etb
+    name: "Stellar Crown — Elite Trainer Box"
+    release_date: 2024-09-13
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Stellar+Crown+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Stellar+Crown+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Stellar+Crown+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Stellar+Crown+Elite+Trainer+Box"
+
+  # ─── Surging Sparks ──────────────────────────────────────────────────────
+  - slug: surging-sparks-booster-box
+    name: "Surging Sparks — Booster Box"
+    release_date: 2024-11-08
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Surging+Sparks+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Surging+Sparks+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Surging+Sparks+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Surging+Sparks+Booster+Box"
+  - slug: surging-sparks-etb
+    name: "Surging Sparks — Elite Trainer Box"
+    release_date: 2024-11-08
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Surging+Sparks+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Surging+Sparks+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Surging+Sparks+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Surging+Sparks+Elite+Trainer+Box"
+
+  # ─── Prismatic Evolutions (special set, extremely high demand) ───────────
+  - slug: prismatic-evolutions-etb
+    name: "Prismatic Evolutions — Elite Trainer Box"
+    release_date: 2025-01-17
+    msrp: 49.99
+    notes: "Eeveelution-themed special set. ETBs widely sold out and scalped."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Prismatic+Evolutions+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Prismatic+Evolutions+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Prismatic+Evolutions+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Prismatic+Evolutions+Elite+Trainer+Box"
+  - slug: prismatic-evolutions-binder-collection
+    name: "Prismatic Evolutions — Binder Collection"
+    release_date: 2025-01-17
+    msrp: 39.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Prismatic+Evolutions+Binder+Collection"
+      target:        "https://www.target.com/s?searchTerm=Prismatic+Evolutions+Binder+Collection"
+      walmart:       "https://www.walmart.com/search?q=Prismatic+Evolutions+Binder+Collection"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Prismatic+Evolutions+Binder+Collection"
+  - slug: prismatic-evolutions-surprise-box
+    name: "Prismatic Evolutions — Surprise Box"
+    release_date: 2025-01-17
+    msrp: 24.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Prismatic+Evolutions+Surprise+Box"
+      target:        "https://www.target.com/s?searchTerm=Prismatic+Evolutions+Surprise+Box"
+      walmart:       "https://www.walmart.com/search?q=Prismatic+Evolutions+Surprise+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Prismatic+Evolutions+Surprise+Box"
+
+  # ─── Journey Together ────────────────────────────────────────────────────
+  - slug: journey-together-booster-box
+    name: "Journey Together — Booster Box"
+    release_date: 2025-03-28
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Journey+Together+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Journey+Together+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Journey+Together+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Journey+Together+Booster+Box"
+  - slug: journey-together-etb
+    name: "Journey Together — Elite Trainer Box"
+    release_date: 2025-03-28
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Journey+Together+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Journey+Together+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Journey+Together+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Journey+Together+Elite+Trainer+Box"
+
+  # ─── Destined Rivals ─────────────────────────────────────────────────────
+  - slug: destined-rivals-booster-box
+    name: "Destined Rivals — Booster Box"
+    release_date: 2025-05-30
+    msrp: 161.64
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Destined+Rivals+Booster+Box"
+      target:        "https://www.target.com/s?searchTerm=Destined+Rivals+Booster+Box"
+      walmart:       "https://www.walmart.com/search?q=Destined+Rivals+Booster+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Destined+Rivals+Booster+Box"
+  - slug: destined-rivals-etb
+    name: "Destined Rivals — Elite Trainer Box"
+    release_date: 2025-05-30
+    msrp: 49.99
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=Destined+Rivals+Elite+Trainer+Box"
+      target:        "https://www.target.com/s?searchTerm=Destined+Rivals+Elite+Trainer+Box"
+      walmart:       "https://www.walmart.com/search?q=Destined+Rivals+Elite+Trainer+Box"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Destined+Rivals+Elite+Trainer+Box"
+
+  # ─── Evergreen products (always available, frequent restocks) ────────────
+  - slug: pokemon-tcg-classic
+    name: "Pokémon TCG Classic Collection"
+    release_date: 2023-11-17
+    msrp: 399.99
+    notes: "Premium box set with classic-format decks. Restocks irregularly."
+    links:
+      pokemoncenter: "https://www.pokemoncenter.com/search?q=TCG+Classic"
+      target:        "https://www.target.com/s?searchTerm=Pokemon+TCG+Classic"
+      walmart:       "https://www.walmart.com/search?q=Pokemon+TCG+Classic"
+      bestbuy:       "https://www.bestbuy.com/site/searchpage.jsp?st=Pokemon+TCG+Classic"

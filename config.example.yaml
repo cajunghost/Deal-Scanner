@@ -35,7 +35,8 @@ notifiers:
 #
 # Local YAML files with drop entries. See drops.example.yaml for the schema.
 drops_files:
-  - drops.yaml
+  - drops.catalog.yaml   # shipped, version-controlled — pull updates with `git pull`
+  - drops.yaml           # your personal additions (gitignored). Optional.
 
 # Remote YAML or JSON drop sources. Each URL should return the same schema as
 # drops.yaml (top-level `drops:` list). Useful for subscribing to a friend's

@@ -1,0 +1,76 @@
+name: Deal Scanner
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # every 15 minutes (GitHub may delay during high load)
+    - cron: "30 13 * * *"   # daily release-day notifications (~9:30am ET)
+  workflow_dispatch:        # manual trigger from the GitHub iOS app
+
+concurrency:
+  group: deal-scanner
+  cancel-in-progress: false
+
+permissions:
+  contents: write           # required to commit state.json back
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -e .
+
+      - name: Build config from secrets
+        env:
+          NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          USER_AGENT: ${{ secrets.USER_AGENT }}
+        run: |
+          python - <<'PY'
+          import os, yaml
+          cfg = {
+              "default_poll_interval_seconds": 900,
+              "default_max_markup_pct": 10.0,
+              "user_agent": os.environ.get("USER_AGENT")
+                  or "DealScannerBot/0.1 (+github-actions)",
+              "respect_robots_txt": True,
+              "state_file": "state.json",
+              "notifiers": {
+                  "ntfy_topic_url": os.environ.get("NTFY_TOPIC_URL") or None,
+                  "discord_webhook_url": os.environ.get("DISCORD_WEBHOOK_URL") or None,
+              },
+              "drops_files": ["drops.catalog.yaml"],
+              "watch_drops": [],
+          }
+          with open("config.yaml", "w") as f:
+              yaml.safe_dump(cfg, f, sort_keys=False)
+          print(open("config.yaml").read())
+          PY
+
+      - name: Restore state
+        uses: actions/cache@v4
+        with:
+          path: state.json
+          key: deal-scanner-state-${{ github.run_id }}
+          restore-keys: |
+            deal-scanner-state-
+
+      - name: Release-day notifications (daily run only)
+        if: github.event.schedule == '30 13 * * *' || github.event_name == 'workflow_dispatch'
+        run: deal-scanner -c config.yaml notify-drops --lookahead 1
+
+      - name: Restock watch pass
+        run: deal-scanner -c config.yaml watch --once
+
+      - name: Save state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: deal-scanner-state-${{ github.run_id }}

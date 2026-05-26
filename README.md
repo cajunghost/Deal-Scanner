@@ -16,12 +16,26 @@ checkout and no anti-bot evasion in this project.
 - **`deal-scanner drops`** — prints the upcoming-release calendar with one
   buy link per retailer per drop. Can export the same data as an
   iCalendar (`.ics`) file you subscribe to from your phone/desktop calendar.
+- **`deal-scanner notify-drops`** — fires release-day push notifications
+  with one-tap retailer links. Run daily via cron or GitHub Actions.
+- **`deal-scanner discover "Set Name"`** — prints (or emits as YAML) the
+  retailer search URLs for any product. Filling in the catalog is ~10 sec
+  per entry.
 - **Aggregation** — merges local YAML drop files with remote YAML/JSON URLs
-  (community lists, your own gist, etc.) so you can subscribe to other
-  people's calendars and override or extend them locally.
-- **Auto-watch from the calendar** — list a drop slug under `watch_drops` and
-  it expands into one watched product per retailer link in that drop. One
-  entry covers all four retailers.
+  so you can subscribe to community-curated lists.
+- **Auto-watch from the calendar** — list a drop slug under `watch_drops`
+  and it expands into one watched product per retailer link.
+- **iPhone-friendly deploy** — see [IPHONE_DEPLOY.md](IPHONE_DEPLOY.md).
+  Fork → add ntfy URL as a repo secret → enable Actions. 10 minutes,
+  no laptop required.
+
+## Pre-seeded catalog
+
+`drops.catalog.yaml` ships with the Scarlet & Violet era sets (booster
+boxes, ETBs, bundles, plus special sets like Pokémon 151, Paldean Fates,
+and Prismatic Evolutions) using durable retailer search URLs as the buy
+links. Pull updates with `git pull`; add your own entries in a personal
+`drops.yaml` (gitignored).
 
 ## Install
 
@@ -69,6 +83,28 @@ deal-scanner drops --days 30          # next 30 days only
 deal-scanner drops --all              # include past releases too
 deal-scanner drops --json             # machine-readable
 deal-scanner drops --ical drops.ics   # export as iCalendar
+```
+
+### Release-day notifications
+
+```bash
+deal-scanner notify-drops             # pings any drop launching today
+deal-scanner notify-drops --lookahead 1   # also include tomorrow
+```
+
+State-deduped: re-running on the same day won't double-alert.
+
+### Discover (add products fast)
+
+```bash
+deal-scanner discover "Mega Evolution Booster Box"
+# pokemoncenter  https://www.pokemoncenter.com/search?q=...
+# target         https://www.target.com/s?searchTerm=...
+# ...
+
+deal-scanner discover "Mega Evolution Booster Box" --yaml \
+    --msrp 161.64 --release-date 2026-09-15
+# emits a ready-to-paste drops.catalog.yaml entry
 ```
 
 To subscribe to the `.ics` file from your calendar app, serve it from a URL

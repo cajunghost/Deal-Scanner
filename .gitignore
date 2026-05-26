@@ -5,6 +5,7 @@ __pycache__/
 venv/
 .env
 config.yaml
+drops.yaml
 state.json
 *.log
 .DS_Store
